@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./a.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>내 대시보드</header>
+        <aside>
+            <nav>
+                <ul>
+                    <li>홈</li>
+                    <li>통계</li>
+                    <li>설정</li>
+                </ul>
+            </nav>
+        </aside>
+
+    <main>
+        <div class="card">
+            <h3>월별 매출</h3>
+            <canvas id="salesChart"></canvas>
+        </div>
+        <div class="card">
+            <h3>사용자 증가</h3>
+                <canvas id="userChart"></canvas>
+        </div>
+    <!-- 더 많은 카드… -->
+    </main>
+    </div>
+
+    <script>
+    // 월별 매출 차트
+    const salesCtx = document.getElementById('salesChart').getContext('2d');
+    new Chart(salesCtx, { type:'line', data:{ labels:['1월','2월','3월'], datasets:[{ label:'매출', data:[300,400,350] }] } });
+
+    // 사용자 차트
+    const userCtx = document.getElementById('userChart').getContext('2d');
+    new Chart(userCtx, { type:'bar', data:{ labels:['1월','2월','3월'], datasets:[{ label:'신규 사용자', data:[50,70,65] }] } });
+    </script>
+</body>
+</html>
