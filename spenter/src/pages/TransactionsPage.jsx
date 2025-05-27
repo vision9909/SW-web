@@ -1,20 +1,11 @@
 import Sidebar from '../components/Sidebar';
+import './Spenter.css';
 
 export default function TransactionsPage() {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {/* 고정 폭 사이드바 */}
-      <div
-        style={{
-          width: '200px',
-          minWidth: '200px',
-          backgroundColor: '#222',
-          color: '#fff',
-          padding: '20px',
-          boxSizing: 'border-box',
-          flexShrink: 0,
-        }}
-      >
+      {/* 사이드바 */}
+      <div className="sidebar">
         <Sidebar />
       </div>
 

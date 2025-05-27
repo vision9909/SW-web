@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import './Spenter.css';
 
 const dummySpendingData = {
   '2025-03-12': [
@@ -119,17 +120,9 @@ export default function DateCategoryPage() {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       {/* 사이드바 */}
-      <div style={{
-  width: '200px',
-  minWidth: '200px',
-  backgroundColor: '#222',
-  color: '#fff',
-  padding: '20px',
-  boxSizing: 'border-box',
-  flexShrink: 0,
-}}>
-  <Sidebar />
-</div>
+      <div className="sidebar">
+        <Sidebar />
+      </div>
 
       {/* 본문 */}
       <div style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>

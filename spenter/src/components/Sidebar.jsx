@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaTachometerAlt, FaWallet, FaSmile, FaCalendarAlt, FaRobot } from 'react-icons/fa';
 
 export default function Sidebar() {
-  const username = localStorage.getItem('loggedInUsername');
+  const userName = localStorage.getItem('loggedInUsername');
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,7 +12,7 @@ export default function Sidebar() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <h2 style={{ margin: 0, fontSize: '40px'}}>Spenter</h2>
+      <h2 style={{ margin: 0, fontSize: '40px' }}>Spenter</h2>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
         <Link to="/dashboard" style={linkStyle}><FaTachometerAlt style={iconStyle} /> 대시보드</Link>
@@ -22,35 +22,22 @@ export default function Sidebar() {
         <Link to="/feedback" style={linkStyle}><FaRobot style={iconStyle} /> 피드백</Link>
       </nav>
 
-      {username && (
-        <div style={{
-          marginTop: 'auto',
-          paddingTop: '20px',
-          fontSize: '14px',
-          color: '#ccc',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <span>{username}님 반갑습니다!</span>
+      {userName && (
+        <div className='userName_logout'>
+          <span style={{ whiteSpace: 'nowrap' }}> {/*← (선택) span 내부 줄바꿈도 금지*/}
+            {userName}님 반갑습니다!
+          </span>
+          
           <button
             onClick={handleLogout}
-            style={{
-              marginLeft: '10px',
-              fontSize: '12px',
-              padding: '4px 8px',
-              cursor: 'pointer',
-              backgroundColor: '#444',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px'
-            }}
+            className='logout_button'
           >
             로그아웃
           </button>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 

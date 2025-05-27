@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/Dashboard.jsx
 import Sidebar from '../components/Sidebar';
 import {
     Chart as ChartJS,
@@ -13,6 +13,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 /*더미데이터*/
 import ChartEmotion from '../components/ChartEmotion';
 import ChartCategory from '../components/ChartCategory';
+
+import './Spenter.css';
 
 const boxStyle = {
     flex: 1,
@@ -32,16 +34,7 @@ export default function DashboardPage() {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
-            <div
-                style={{
-                    width: '200px',
-                    minWidth: '200px',
-                    backgroundColor: '#222',
-                    color: '#fff',
-                    padding: '20px',
-                    boxSizing: 'border-box',
-                    flexShrink: 0,
-                }}>
+            <div className="sidebar">
                 <Sidebar />
             </div>
             {/* 본문 */}
@@ -89,9 +82,10 @@ export default function DashboardPage() {
                             cursor: 'pointer',
                             padding: '10px',
                         }}
-                        onClick={() => navigate('/emotion-category')}
                     >
-                        <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>감정 별 지출</div>
+                        <div style={{ fontSize: '20px',fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
+                            onClick={() => navigate('/emotion-category')}
+                        >감정 별 지출</div>
                         <div style={{ width: '80%', height: '300px' }}>
                             <ChartEmotion />
                         </div>
@@ -106,12 +100,12 @@ export default function DashboardPage() {
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'flex-start',
-                            cursor: 'pointer',
-                            padding: '10px',
+                            padding: '10px'
                         }}
-                        onClick={() => navigate('/emotion-category')}
                     >
-                        <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>카테고리 별 지출</div>
+                        <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
+                            onClick={() => navigate('/emotion-category')}
+                        >카테고리 별 지출</div>
                         <div style={{ width: '80%', height: '300px' }}>
                             <ChartCategory />
                         </div>

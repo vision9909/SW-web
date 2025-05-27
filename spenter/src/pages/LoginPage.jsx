@@ -19,8 +19,9 @@ export default function LoginPage() {
 
       const result = await res.json();
 
-      if (res.status === 200 && result.username) {
-        localStorage.setItem('loggedInUsername', result.username);
+      if (res.status === 200 && result.userName) {
+        // 로그인 성공: userName을 localStorage에 저장
+        localStorage.setItem('loggedInUsername', result.userName);
         navigate('/dashboard');
       } else {
         setMessage(result.message || 'ID 또는 비밀번호가 올바르지 않습니다.');
