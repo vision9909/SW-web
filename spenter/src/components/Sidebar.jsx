@@ -1,5 +1,7 @@
+//src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTachometerAlt, FaWallet, FaSmile, FaCalendarAlt, FaRobot } from 'react-icons/fa';
+import '../pages/Spenter.css';
 
 export default function Sidebar() {
   const userName = localStorage.getItem('loggedInUsername');
@@ -15,17 +17,17 @@ export default function Sidebar() {
       <h2 style={{ margin: 0, fontSize: '40px' }}>Spenter</h2>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
-        <Link to="/dashboard" style={linkStyle}><FaTachometerAlt style={iconStyle} /> 대시보드</Link>
-        <Link to="/transactions" style={linkStyle}><FaWallet style={iconStyle} /> 거래내역</Link>
-        <Link to="/emotion-category" style={linkStyle}><FaSmile style={iconStyle} /> 감정/카테고리 별 지출</Link>
-        <Link to="/date-category" style={linkStyle}><FaCalendarAlt style={iconStyle} /> 날짜 별 지출</Link>
-        <Link to="/feedback" style={linkStyle}><FaRobot style={iconStyle} /> 피드백</Link>
+        <Link to="/dashboard" className='linkStyle'><FaTachometerAlt className='iconStyle' /> 대시보드</Link>
+        <Link to="/transactions" className='linkStyle'><FaWallet className='iconStyle' /> 거래내역</Link>
+        <Link to="/emotion-category" className='linkStyle'><FaSmile className='iconStyle' /> 감정/카테고리 별 지출</Link>
+        <Link to="/date-category" className='linkStyle'><FaCalendarAlt className='iconStyle' /> 날짜 별 지출</Link>
+        <Link to="/feedback" className='linkStyle'><FaRobot className='iconStyle' /> 피드백</Link>
       </nav>
 
       {userName && (
         <div className='userName_logout'>
           <span style={{ whiteSpace: 'nowrap' }}> {/*← (선택) span 내부 줄바꿈도 금지*/}
-            {userName}님 반갑습니다!
+            {userName} 님 반갑습니다!
           </span>
           
           <button
@@ -40,14 +42,3 @@ export default function Sidebar() {
     </div >
   );
 }
-
-const linkStyle = {
-  color: 'white',
-  textDecoration: 'none',
-  fontSize: '15px',
-  fontWeight: 'bold',
-};
-
-const iconStyle = {
-  fontSize: '15px'
-};

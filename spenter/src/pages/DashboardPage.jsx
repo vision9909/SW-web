@@ -7,24 +7,25 @@ import {
     Legend
 } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import './Spenter.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
 /*더미데이터*/
 import ChartEmotion from '../components/ChartEmotion';
 import ChartCategory from '../components/ChartCategory';
 
-import './Spenter.css';
-
 const boxStyle = {
     flex: 1,
     height: '100%',
-    border: '1px solid #ccc',
+    border: '1px solid #000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '18px',
     fontWeight: 'bold',
+
+    borderRadius: '10px',
+    backgroundColor: '#D0EBE2'
 };
 
 
@@ -46,6 +47,7 @@ export default function DashboardPage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '20px',
+                    backgroundColor: '#F5E2C2'
                 }}
             >
                 {/* 1행 */}
@@ -74,16 +76,19 @@ export default function DashboardPage() {
                     <div
                         style={{
                             flex: 1,
-                            border: '1px solid #ccc',
+                            border: '1px solid #000',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                             cursor: 'pointer',
                             padding: '10px',
+
+                            borderRadius: '10px',
+                            backgroundColor: '#D0EBE2'
                         }}
                     >
-                        <div style={{ fontSize: '20px',fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
+                        <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
                             onClick={() => navigate('/emotion-category')}
                         >감정 별 지출</div>
                         <div style={{ width: '80%', height: '300px' }}>
@@ -95,12 +100,15 @@ export default function DashboardPage() {
                     <div
                         style={{
                             flex: 1,
-                            border: '1px solid #ccc',
+                            border: '1px solid #000',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'flex-start',
-                            padding: '10px'
+                            padding: '10px',
+
+                            borderRadius: '10px',
+                            backgroundColor: '#D0EBE2'
                         }}
                     >
                         <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
@@ -117,13 +125,16 @@ export default function DashboardPage() {
                     <div
                         style={{
                             flex: 1,
-                            border: '1px solid #ccc',
+                            border: '1px solid #000',
                             fontWeight: 'bold',
                             fontSize: '16px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+
+                            borderRadius: '10px',
+                            backgroundColor: '#D0EBE2'
                         }}
                         onClick={() => navigate('/date-category')}
                     >
@@ -132,13 +143,16 @@ export default function DashboardPage() {
                     <div
                         style={{
                             flex: 1,
-                            border: '1px solid #ccc',
+                            border: '1px solid #000',
                             fontWeight: 'bold',
                             fontSize: '16px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+
+                            borderRadius: '10px',
+                            backgroundColor: '#D0EBE2'
                         }}
                         onClick={() => navigate('/feedback')}
                     >
