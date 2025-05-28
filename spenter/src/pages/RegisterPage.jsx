@@ -32,18 +32,6 @@ export default function RegisterPage() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <div
-        style={{
-          width: '200px',
-          minWidth: '200px',
-          backgroundColor: '#222',
-          color: '#fff',
-          padding: '20px',
-          boxSizing: 'border-box',
-          flexShrink: 0,
-        }}>
-        <Sidebar />
-      </div>
 
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <form onSubmit={handleSubmit}
