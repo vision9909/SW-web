@@ -32,7 +32,6 @@ export default function RegisterPage() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <form onSubmit={handleSubmit}
           style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '15px' }}
