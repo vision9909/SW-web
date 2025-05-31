@@ -14,24 +14,21 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 import ChartEmotion from '../components/ChartEmotion';
 import ChartCategory from '../components/ChartCategory';
 
-const boxStyle = {
-    flex: 1,
-    height: '100%',
-    border: '1px solid #000',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '18px',
-    fontWeight: 'bold',
-
-    borderRadius: '10px',
-    backgroundColor: '#D0EBE2'
-};
 
 
 
-export default function DashboardPage() {
+export default function DashboardPage({transactions}) {
     const navigate = useNavigate();
+
+    /* Transactions 잔액, 수입, 지출 계산 코드 */
+    const totalIncome = transactions
+        .filter((t) => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+    const totalExpense = transactions
+        .filter((t) => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+    const balance = totalIncome - totalExpense;
+
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
@@ -66,54 +63,41 @@ export default function DashboardPage() {
                             거래내역
                         </div>
                         <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
-                            <div style={boxStyle}>잔액</div>
-                            <div style={boxStyle}>한 달 수입</div>
-                            <div style={boxStyle}>한 달 지출</div>
+                            <div className="Transactions_box balance-box">
+                                <h3>잔액</h3>
+                                <p>{balance.toLocaleString()}원</p>
+                            </div>
+                            <div className="Transactions_box income-box">
+                                <h3>수입</h3>
+                                <p>{totalIncome.toLocaleString()}원</p>
+                            </div>
+                            <div className="Transactions_box expense-box">
+                                <h3>지출</h3>
+                                <p>{totalExpense.toLocaleString()}원</p>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', flex: 1 }}>
+                            {/* 유저가 직접 입력한 input-text */}
+                            <div className="User_Transaction_box">
+                                <h2 style={{ textAlign: 'center' }}>ㅇㅇ</h2>
+                            </div>
                         </div>
                     </div>
-
                     {/* 감정별 지출 차트 */}
-                    <div
-                        style={{
-                            flex: 1,
-                            border: '1px solid #000',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            cursor: 'pointer',
-                            padding: '10px',
-
-                            borderRadius: '10px',
-                            backgroundColor: '#D0EBE2'
-                        }}
-                    >
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
-                            onClick={() => navigate('/emotion-category')}
-                        >감정 별 지출</div>
+                    <div className='EmotionCategory_container'>
+                        <div style={{ marginBottom: '10px', }} onClick={() => navigate('/emotion-category')}>
+                            감정 별 지출
+                        </div>
                         <div style={{ width: '80%', height: '300px' }}>
                             <ChartEmotion />
                         </div>
                     </div>
 
                     {/* 카테고리별 지출 차트 */}
-                    <div
-                        style={{
-                            flex: 1,
-                            border: '1px solid #000',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            padding: '10px',
-
-                            borderRadius: '10px',
-                            backgroundColor: '#D0EBE2'
-                        }}
-                    >
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', cursor: 'pointer' }}
-                            onClick={() => navigate('/emotion-category')}
-                        >카테고리 별 지출</div>
+                    <div className='EmotionCategory_container'>
+                        <div style={{ marginBottom: '10px' }} onClick={() => navigate('/emotion-category')}>
+                            카테고리 별 지출
+                        </div>
                         <div style={{ width: '80%', height: '300px' }}>
                             <ChartCategory />
                         </div>
@@ -122,40 +106,10 @@ export default function DashboardPage() {
 
                 {/* 2행: 달력 + AI 피드백 */}
                 <div style={{ display: 'flex', gap: '20px', height: '50%' }}>
-                    <div
-                        style={{
-                            flex: 1,
-                            border: '1px solid #000',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-
-                            borderRadius: '10px',
-                            backgroundColor: '#D0EBE2'
-                        }}
-                        onClick={() => navigate('/date-category')}
-                    >
+                    <div className='DateCategory_container' onClick={() => navigate('/date-category')}>
                         날짜 별 지출 (달력)
                     </div>
-                    <div
-                        style={{
-                            flex: 1,
-                            border: '1px solid #000',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-
-                            borderRadius: '10px',
-                            backgroundColor: '#D0EBE2'
-                        }}
-                        onClick={() => navigate('/feedback')}
-                    >
+                    <div className='Feedback_container' onClick={() => navigate('/feedback')}>
                         AI 피드백
                     </div>
                 </div>
