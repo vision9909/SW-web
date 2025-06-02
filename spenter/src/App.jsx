@@ -13,6 +13,9 @@ import FeedbackPage from './pages/FeedbackPage';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 export default function App() {
+    // id
+    const userIdFromStorage = localStorage.getItem('userId');
+
     {/* 거래내역을 대시보드에 볼 수 있게 하기 위함 */ }
     const [transactions, setTransactions] = useState([
         {
@@ -43,7 +46,10 @@ export default function App() {
                     path="/dashboard"
                     element={
                         <ProtectedRoute>
-                            <DashboardPage transactions={transactions} />
+                            <DashboardPage
+                                userId={userIdFromStorage}
+                                transactions={transactions}
+                            />
                         </ProtectedRoute>
                     }
                 />
