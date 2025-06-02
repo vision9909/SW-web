@@ -7,6 +7,7 @@ import {
     Legend
 } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import AI_AnalyzeForm from '../components/AI_AnalyzeForm';
 import './Spenter.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -17,7 +18,7 @@ import ChartCategory from '../components/ChartCategory';
 
 
 
-export default function DashboardPage({transactions}) {
+export default function DashboardPage({ transactions, userId }) {
     const navigate = useNavigate();
 
     /* Transactions 잔액, 수입, 지출 계산 코드 */
@@ -78,8 +79,9 @@ export default function DashboardPage({transactions}) {
                         </div>
                         <div style={{ display: 'flex', flex: 1 }}>
                             {/* 유저가 직접 입력한 input-text */}
-                            <div className="User_Transaction_box">
-                                <h2 style={{ textAlign: 'center' }}>ㅇㅇ</h2>
+                            <div className="User_Transaction_box" style={{ width: '100%' }}>
+                                <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>AI 지출 분석</h2>
+                                <AI_AnalyzeForm userId={userId} />
                             </div>
                         </div>
                     </div>
