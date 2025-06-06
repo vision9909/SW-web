@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TransactionForm from '../components/TransactionForm'; // 입력 폼 가져오기
-import './Spenter.css';
+import './TransactionsStyle.css';
 
 const TransactionsPage = ({ transactions, setTransactions }) => {
   // === 1. 거래 목록을 관리하는 State ===
