@@ -1,45 +1,93 @@
+// src/pages/EmotionCategoryPage.jsx
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 import ChartEmotion from '../components/ChartEmotion';
 import ChartCategory from '../components/ChartCategory';
-import Sidebar from '../components/Sidebar';
-import './Spenter.css';
+import './DashboardStyle.css'; // 전역 스타일(필요 시)
+// import './EmotionCategoryPage.css'; // 페이지만을 위한 스타일(선택사항)
 
-export default function EmotionCategoryPage() {
+/**
+ * EmotionCategoryPage
+ *  - 왼쪽: DashboardPage 와 동일한 “사이드바 + 잔액/수입/지출 요약 박스”
+ *  - 오른쪽: 감정별/카테고리별 파이 차트
+ */
+export default function EmotionCategoryPage({ transactions }) {
+  const navigate = useNavigate();
+
+  // ────────────────────────────────────────────────────
+  // 1) 로그인 여부 체크: localStorage에 userId가 없으면 /login으로 리다이렉트
+  // ────────────────────────────────────────────────────
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  // ────────────────────────────────────────────────────
+  // 2) transactions를 이용해 “잔액/수입/지출” 계산
+  //    - transactions prop이 없다면 빈 배열로 취급
+  // ────────────────────────────────────────────────────
+  const txns = transactions || [];
+  const totalIncome = txns
+    .filter((t) => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const totalExpense = txns
+    .filter((t) => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const balance = totalIncome - totalExpense;
+
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      {/* 사이드바 */}
+    <div style={{ display: 'flex', height: '100vh' }}>
       <div className="sidebar">
         <Sidebar />
       </div>
 
-      {/* 메인 콘텐츠 */}
+      {/* ── 우측 메인 콘텐츠(차트) 영역 ── */}
       <div
         style={{
-          flex: 1,
-          padding: '40px',
-          overflowY: 'auto',
+          flex: 2.2,
+          padding: '20px 30px',
           boxSizing: 'border-box',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexDirection: 'column',
+          gap: '20px',
+          backgroundColor: '#F5E2C2',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '60px',
-            maxWidth: '1400px',
-            width: '100%',
-          }}
-        >
-          <div style={{ flex: '1 1 min(500px, 45%)', minWidth: '350px', height: 'auto' }}>
-            <h2 style={{ textAlign: 'center' }}>감정별 지출</h2>
-            <ChartEmotion height='400px' />
+        {/* 3) 위쪽: 뒤로 가기 버튼 + 페이지 제목 */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              marginRight: '15px',
+              padding: '5px 10px',
+              fontSize: '14px',
+              cursor: 'pointer',
+            }}
+          >
+            ← 뒤로가기
+          </button>
+          <h2 style={{ margin: 0 }}>감정/카테고리별 지출 통계</h2>
+        </div>
+
+        {/* 4) 차트가 들어갈 영역 */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', flex: 1 }}>
+          {/* 4-1) 감정별 지출 차트 */}
+          <div
+            style={{ flex: '1 1 400px', minWidth: '400px', height: '350px', backgroundColor: '#ffffff', borderRadius: '8px', padding: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+          >
+            <h3 style={{ textAlign: 'center', marginBottom: '10px' }}>감정별 지출 비율</h3>
+            <ChartEmotion height="280px" />
           </div>
-          <div style={{ flex: '1 1 min(500px, 45%)', minWidth: '350px', height: 'auto' }}>
-            <h2 style={{ textAlign: 'center' }}>카테고리별 지출</h2>
-            <ChartCategory height='400px' />
+
+          {/* 4-2) 카테고리별 지출 차트 */}
+          <div
+            style={{ flex: '1 1 400px', minWidth: '400px', height: '350px', backgroundColor: '#ffffff', borderRadius: '8px', padding: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+          >
+            <h3 style={{ textAlign: 'center', marginBottom: '10px' }}>카테고리별 지출 비율</h3>
+            <ChartCategory height="280px" />
           </div>
         </div>
       </div>
