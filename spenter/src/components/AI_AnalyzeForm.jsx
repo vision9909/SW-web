@@ -1,6 +1,7 @@
 // src/components/AI_AnalyzeForm.jsx
 
 import React, { useState } from 'react';
+import '../pages/DashboardStyle.css';
 
 export default function AI_AnalyzeForm({ userId }) {
     const [text, setText] = useState('');
@@ -37,34 +38,17 @@ export default function AI_AnalyzeForm({ userId }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: '1rem' }}>
+        <form onSubmit={handleSubmit} className='AI_inputTextContainer'>
             <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="예: '5일 전에 고기집에서 25000원 정도 먹었어'"
-                rows={4}
-                style={{
-                    // width: '100%',
-                    // padding: '0.5rem',
-                    // fontSize: '1rem',
-                    // borderRadius: '4px',
-                    // border: '1px solid #ccc',
-                    // resize: 'vertical'
-                }}
-            />
+                placeholder="자세한 정보를 입력하세요."
+                rows={3}
+                className='AI_inputText' />
+            <br></br>
             <button
                 type="submit"
-                style={{
-                    // marginTop: '0.5rem',
-                    // padding: '0.5rem 1rem',
-                    // fontSize: '1rem',
-                    // borderRadius: '4px',
-                    // border: 'none',
-                    // backgroundColor: '#007bff',
-                    // color: '#fff',
-                    // cursor: 'pointer'
-                }}
-            >
+                className='AI_inputText_btn'>
                 AI 분석 및 저장
             </button>
         </form>
