@@ -58,22 +58,11 @@ export default function EmotionCategoryPage({ transactions }) {
       >
         {/* 3) 위쪽: 뒤로 가기 버튼 + 페이지 제목 */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              marginRight: '15px',
-              padding: '5px 10px',
-              fontSize: '14px',
-              cursor: 'pointer',
-            }}
-          >
-            ← 뒤로가기
-          </button>
           <h2 style={{ margin: 0 }}>감정/카테고리별 지출 통계</h2>
         </div>
 
         {/* 4) 차트가 들어갈 영역 */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', flex: 1 }}>
+        <div style={{ display: 'flex', gap: '40px', flex: 1 }}>
           {/* 4-1) 감정별 지출 차트 */}
           <div
             style={{ flex: '1 1 400px', minWidth: '400px', height: '350px', backgroundColor: '#ffffff', borderRadius: '8px', padding: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
