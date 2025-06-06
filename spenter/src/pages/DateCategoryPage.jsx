@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import './Spenter.css';
+
 
 const dummySpendingData = {
   '2025-03-12': [
