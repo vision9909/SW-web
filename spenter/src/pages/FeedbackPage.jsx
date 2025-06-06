@@ -1,6 +1,6 @@
 // src/pages/FeedbackPage.jsx
 import Sidebar from '../components/Sidebar';
-import './Spenter.css';
+import './FeedbackStyle.css';
 
 export default function FeedbackPage() {
   // 임시로 작은 박스를 10개 만들어 놓은 예시 배열
