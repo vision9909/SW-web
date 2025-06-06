@@ -317,6 +317,58 @@ app.get('/api/chart/category', async (req, res) => {
     }
 });
 
+
+// ─────────────────────────────────────────────────────────────────
+// (3) 날짜별 지출 내역 조회 API (달력용)
+//   - 요청: GET /api/chart/calendar?id=<사용자ID>
+//   - 반환 예시:
+//     {
+//       "2025-06-05": [
+//         { category: "식비", amount: 8000, emotion: "스트레스" },
+//         { category: "문화", amount: 20000, emotion: "기쁨" }
+//       ],
+//       ...
+//     }
+// ─────────────────────────────────────────────────────────────────
+app.get('/api/chart/calendar', async (req, res) => {
+    try {
+        const userId = req.query.id;
+        if (!userId) {
+            return res.status(400).json({ message: 'id 파라미터가 필요합니다.' });
+        }
+
+        const [rows] = await db.query(
+            `SELECT credit_date AS date, use_category AS category, credit AS amount, emotion
+            FROM ai_transactional
+            WHERE id = ?
+            ORDER BY credit_date`,
+            [userId]
+        );
+
+        const grouped = {};
+        rows.forEach(row => {
+            const date = typeof row.date === 'string'
+                ? row.date
+                : row.date.toLocaleDateString('sv-SE'); // 'YYYY-MM-DD'
+
+            if (!grouped[date]) grouped[date] = [];
+            grouped[date].push({
+                category: row.category,
+                amount: row.amount,
+                emotion: row.emotion
+            });
+        });
+
+        return res.json(grouped);
+    } catch (err) {
+        console.error('Error GET /api/chart/calendar:', err);
+        return res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server listening on port ${PORT}`);
