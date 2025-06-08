@@ -150,7 +150,7 @@ const TransactionsPage = ({ transactions, setTransactions }) => {
                   }`}
                 >
                   <span>{tx.date}</span>
-                  <span>{tx.category}</span> 
+                  <span>{tx.category}</span>
                   <span>{tx.detail}</span>
 
                   <span className="Tr-amount">
