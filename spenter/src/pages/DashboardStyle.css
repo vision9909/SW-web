@@ -351,7 +351,15 @@ body {
     gap: 10px;
 }
 
-
+.DateCategory_Week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: "Edu NSW ACT Hand Pre", cursive;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
 
 
 /* 피드백 컨테이너 */

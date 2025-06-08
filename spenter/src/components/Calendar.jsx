@@ -150,6 +150,13 @@ export default function Calendar({ userId }) {
                 </div>
             </div>
 
+            {/* ① 요일 헤더 추가 */}
+            <div className='DateCategory_Week'>
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+                    <div key={d}>{d}</div>
+                ))}
+            </div>
+
             {/* 캘린더 그리드 */}
             <div style={calendarWrapper}>
                 <div style={calendarGrid}>{cells}</div>
