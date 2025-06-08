@@ -14,7 +14,7 @@ export default function Sidebar() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <h2 style={{ margin: 0, fontSize: '40px' }}>Spenter</h2>
+      <Link to="/dashboard" className='linkStyle'><h2 style={{ margin: 0, fontSize: '40px' }}>Spenter</h2></Link>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
         <Link to="/dashboard" className='linkStyle'><FaTachometerAlt className='iconStyle' /> 대시보드</Link>
