@@ -1,5 +1,7 @@
 // src/Dashboard.jsx
 import Sidebar from '../components/Sidebar';
+import AI_AnalyzeForm from '../components/AI_AnalyzeForm';
+import Calendar from '../components/Calendar';
 import {
     Chart as ChartJS,
     ArcElement,
@@ -7,7 +9,6 @@ import {
     Legend
 } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
-import AI_AnalyzeForm from '../components/AI_AnalyzeForm';
 import './DashboardStyle.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -93,8 +94,11 @@ export default function DashboardPage({ transactions, userId }) {
 
                 {/* 2행: 달력 + AI 피드백 */}
                 <div className='dashboard_bottom'>
-                    <div className='DateCategory_container' onClick={() => navigate('/date-category')}>
-                        날짜 별 지출 (달력)
+                    <div className='DateCategory_container'>
+                        {/* 날짜 별 지출 (달력) */}
+                        <div className='DateCategory_calendar'>
+                            <Calendar userId={userId} />
+                        </div>
                     </div>
                     <div className='Feedback_container' onClick={() => navigate('/feedback')}>
                         AI 피드백
