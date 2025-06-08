@@ -73,13 +73,17 @@ export default function ChartCategory({ height = '85%' }) {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'top' },
-      datalabels: {
-        formatter: (value, context) => {
-          const total = context.chart._metasets[0].total;
-          return ((value / total) * 100).toFixed(1) + '%';
-        },
-        color: '#000',
+      legend: {
+        position: 'top',       // 범례를 차트 상단에
+        align: 'center',       // 중앙 정렬
+        labels: {
+          font: { size: 16 },  // 글자 크기
+          padding: 12,         // 항목 간 간격
+        }
+      },
+      tooltip: {
+        bodyFont: { size: 14 },
+        titleFont: { size: 16 },
       },
     },
   };

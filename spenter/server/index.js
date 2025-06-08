@@ -366,8 +366,36 @@ app.get('/api/chart/calendar', async (req, res) => {
     }
 });
 
+// ==================================================================
+// (7) 월별 지출 합계 조회
+//    GET /api/spending/monthly?id=<userId>
+// ==================================================================
+app.get('/api/spending/monthly', async (req, res) => {
+  const userId = req.query.id;
+  if (!userId) {
+    return res.status(400).json({ error: 'userId (login.id) 가 필요합니다.' });
+  }
 
-
+  try {
+    // 여기서 pool.query가 아니라 db.query를 사용합니다.
+    const [rows] = await db.query(
+      `
+      SELECT
+        DATE_FORMAT(credit_date, '%Y-%m') AS month,
+        SUM(credit) AS amount
+      FROM ai_transactional
+      WHERE id = ?
+      GROUP BY month
+      ORDER BY month;
+      `,
+      [userId]
+    );
+    return res.json(rows);
+  } catch (err) {
+    console.error('월별 지출 조회 실패', err);
+    return res.status(500).json({ error: '월별 지출 조회 중 오류가 발생했습니다.' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
