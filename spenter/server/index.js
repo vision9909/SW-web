@@ -274,7 +274,7 @@ app.get('/api/chart/emotion', async (req, res) => {
     try {
         const userId = req.query.id;
         if (!userId) {
-            return res.status(400).json({message: 'id 파라미터가 필요합니다.'});
+            return res.status(400).json({ message: 'id 파라미터가 필요합니다.' });
         }
 
         const [rows] = await db.query(
@@ -287,7 +287,7 @@ app.get('/api/chart/emotion', async (req, res) => {
         return res.json(rows);
     } catch (err) {
         console.error('Error GET /api/chart/emotion:', err);
-        return res.status(500).json({message: '서버 오류'});
+        return res.status(500).json({ message: '서버 오류' });
     }
 });
 
@@ -300,7 +300,7 @@ app.get('/api/chart/category', async (req, res) => {
     try {
         const userId = req.query.id;
         if (!userId) {
-            return res.status(400).json({message: 'id 파라미터가 필요합니다.'});
+            return res.status(400).json({ message: 'id 파라미터가 필요합니다.' });
         }
 
         const [rows] = await db.query(
@@ -313,7 +313,7 @@ app.get('/api/chart/category', async (req, res) => {
         return res.json(rows);
     } catch (err) {
         console.error('Error GET /api/chart/category:', err);
-        return res.status(500).json({message: '서버 오류'});
+        return res.status(500).json({ message: '서버 오류' });
     }
 });
 
@@ -365,9 +365,6 @@ app.get('/api/chart/calendar', async (req, res) => {
         return res.status(500).json({ message: '서버 오류' });
     }
 });
-
-
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
