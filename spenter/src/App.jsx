@@ -66,7 +66,12 @@ export default function App() {
                 />
                 {/* 감정 카테고리 별 지출 라우터 */}
                 <Route path="/emotion-category" element={
-                    <ProtectedRoute> <EmotionCategoryPage /> </ProtectedRoute>
+                    <ProtectedRoute>
+                        <EmotionCategoryPage
+                            userId={userIdFromStorage}
+                            transactions={transactions}
+                            />
+                        </ProtectedRoute>
                 } />
 
                 {/* 날짜 별 지출 라우터 */}

@@ -1,97 +1,174 @@
 // src/components/ChartEmotion.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-export default function ChartEmotion({ height = '85%' }) {
-  // 1) 상태: 감정 라벨 목록, 각 감정별 합계 금액
-  const [labels, setLabels] = useState([]);
-  const [dataValues, setDataValues] = useState([]);
+export default function ChartEmotion({
+                                         userId,
+                                         year,            // 부모로부터 받은 연도
+                                         month,           // 부모로부터 받은 월
+                                         onSelect,
+                                         onDateChange,    // 연·월 변경 시 호출
+                                         height = '420px'
+                                     }) {
+    const chartRef = useRef(null);
+    const [calendarData, setCalendarData] = useState({});
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // 2) localStorage에서 userId 꺼내기
-    const userId = localStorage.getItem('userId');
-    console.log('ChartEmotion → localStorage userId =', userId);
+    // 1) 전체 달력 데이터 로드
+    useEffect(() => {
+        if (!userId) return;
+        setLoading(true);
+        fetch(`/api/chart/calendar?id=${encodeURIComponent(userId)}`)
+            .then(res => res.json())
+            .then(json => {
+                setCalendarData(
+                    json && typeof json === 'object' && !Array.isArray(json)
+                        ? json
+                        : {}
+                );
+            })
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, [userId]);
 
-    if (!userId) {
-      // 로그인 정보가 없으면 fetch를 수행하지 않음
-      return;
-    }
+    // 2) 연·월 옵션
+    const today = new Date();
+    const years  = Array.from({ length: 5 }, (_, i) => today.getFullYear() - i);
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-    // 3) 백엔드 API 호출
-    fetch(`http://localhost:5000/api/chart/emotion?id=${userId}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`Emotion API 요청 실패 (status: ${res.status})`);
-          }
-          return res.json();
-        })
-        .then((json) => {
-          console.log('ChartEmotion API 응답 →', json);
-          // json 형식: [ { emotion: '기쁨', total: 16000 }, … ]
-          const fetchedLabels = json.map((item) => item.emotion);
-          const fetchedValues = json.map((item) => item.total);
+    // 3) summary 계산 (props.year, props.month 사용)
+    const summary = useMemo(() => {
+        if (loading) return [];
+        const prefix = `${year}-${String(month).padStart(2, '0')}`;
+        const entries = Object.entries(calendarData)
+            .filter(([date]) => date.startsWith(prefix))
+            .flatMap(([, arr]) => (Array.isArray(arr) ? arr : []));
 
-          setLabels(fetchedLabels);
-          setDataValues(fetchedValues);
-        })
-        .catch((err) => {
-          console.error('ChartEmotion fetch error:', err);
-        });
-  }, []); // 마운트 시 한 번만 실행
+        const totals = entries.reduce((acc, item) => {
+            if (item.emotion && typeof item.amount === 'number') {
+                acc[item.emotion] = (acc[item.emotion] || 0) + item.amount;
+            }
+            return acc;
+        }, {});
 
-  // 4) 차트에 넘겨줄 데이터 객체
-  const data = {
-    labels,
-    datasets: [
-      {
-        data: dataValues,
-        backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#B0E0E6',
-          '#A52A2A',
-          '#7FFFD4',
-          '#C71585',
-          '#00FA9A',
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+        return Object.entries(totals).map(([emotion, total]) => ({ emotion, total }));
+    }, [calendarData, loading, year, month]);
 
-  // 5) 차트 옵션
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'top' },
-      datalabels: {
-        formatter: (value, context) => {
-          const total = context.chart._metasets[0].total;
-          return ((value / total) * 100).toFixed(1) + '%';
-        },
-        color: '#000',
-      },
-    },
-  };
+    // 4) 클릭 → 상세 계산 및 전달
+    const handleClick = e => {
+        const chart = chartRef.current;
+        if (!chart) return;
+        const pts = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (!pts.length) return;
+        const idx = pts[0].index;
+        const emotion = summary[idx]?.emotion;
+        if (!emotion) return;
 
-  return (
-      <div style={{ width: '100%', height }}>
-        {labels.length > 0 ? (
-            <Pie data={data} options={options} />
-        ) : (
-            <p>감정별 지출 데이터를 불러오는 중입니다...</p>
-        )}
-      </div>
-  );
+        const prefix = `${year}-${String(month).padStart(2, '0')}`;
+        const details = Object.entries(calendarData)
+            .filter(([date]) => date.startsWith(prefix))
+            .flatMap(([, arr]) => (Array.isArray(arr) ? arr : []))
+            .filter(item => item.emotion === emotion)
+            .map(item => ({
+                date:   item.date,
+                place:  item.use_place || '장소 없음',
+                amount: item.amount,
+                category: item.use_category || '카테고리 없음'
+            }));
+
+        onSelect && onSelect(emotion, details);
+    };
+
+    // 5) chart.js 데이터 & 옵션
+    const data = {
+        labels:   summary.map(d => d.emotion),
+        datasets: [{
+            data:           summary.map(d => d.total),
+            backgroundColor:[
+                '#FF6384','#36A2EB','#FFCE56','#B0E0E6','#A52A2A','#7FFFD4'
+            ],
+            borderWidth:    1
+        }]
+    };
+
+    const options = {
+        responsive:          true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text:    '감정별 지출 비율',
+                align:   'center',
+                font:    { size: 22 },
+                padding: { bottom: 12 }
+            },
+            legend: {
+                position: 'top',
+                align:    'center',
+                labels:   { font: { size: 18 }, padding: 8 }
+            },
+            datalabels: {
+                color: 'white',
+                font:  { weight: 'bold', size: 14 },
+                formatter: (value, ctx) => {
+                    const arr   = ctx.chart.data.datasets[0].data;
+                    const total = arr.reduce((a,b) => a + b, 0);
+                    return total ? `${((value/total)*100).toFixed(1)}%` : '';
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: ctx => `${ctx.label}: ₩${ctx.parsed.toLocaleString()}`
+                }
+            }
+        }
+    };
+
+    return (
+        <div style={{ width: '100%', height }}>
+            {/* 연·월 선택 */}
+            <div style={{ textAlign: 'right', marginBottom: 12 }}>
+                <select
+                    value={year}
+                    onChange={e => onDateChange(+e.target.value, month)}
+                    style={{ fontSize: 16, marginRight: 8 }}
+                >
+                    {years.map(y => <option key={y} value={y}>{y}년</option>)}
+                </select>
+                <select
+                    value={month}
+                    onChange={e => onDateChange(year, +e.target.value)}
+                    style={{ fontSize: 16 }}
+                >
+                    {months.map(m => <option key={m} value={m}>{m}월</option>)}
+                </select>
+            </div>
+
+            {loading ? (
+                <p style={{ textAlign: 'center' }}>데이터 불러오는 중…</p>
+            ) : summary.length > 0 ? (
+                <Pie
+                    key={`${year}-${month}`}
+                    ref={chartRef}
+                    data={data}
+                    options={options}
+                    onClick={handleClick}
+                    redraw
+                />
+            ) : (
+                <p style={{ textAlign: 'center' }}>
+                    {year}년 {month}월에 지출 내역이 없습니다.
+                </p>
+            )}
+        </div>
+    );
 }

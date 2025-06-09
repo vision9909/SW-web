@@ -365,6 +365,100 @@ app.get('/api/chart/calendar', async (req, res) => {
         return res.status(500).json({ message: '서버 오류' });
     }
 });
+// ─────────────────────────────────────────────────────────────────
+// (1) 감정별 지출 합계 조회 API (연·월 필터 포함)
+//    GET /api/chart/emotion?id=<userId>&year=2025&month=6
+// ─────────────────────────────────────────────────────────────────
+app.get('/api/chart/emotion', async (req, res) => {
+  const { id, year, month } = req.query;
+  if (!id || !year || !month) {
+    return res
+      .status(400)
+      .json({ error: 'id, year, month 파라미터가 모두 필요합니다.' });
+  }
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT emotion, SUM(credit) AS total
+      FROM ai_transactional
+      WHERE id = ?
+        AND YEAR(credit_date) = ?
+        AND MONTH(credit_date) = ?
+      GROUP BY emotion
+      `,
+      [id, year, month]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Error GET /api/chart/emotion:', err);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// (2) 감정별 지출 상세 조회 API (연·월 필터 포함)
+//    GET /api/chart/emotion/detail?id=<userId>&emotion=<감정>&year=2025&month=6
+// ─────────────────────────────────────────────────────────────────
+app.get('/api/chart/emotion/detail', async (req, res) => {
+  const { id, emotion, year, month } = req.query;
+  if (!id || !emotion || !year || !month) {
+    return res
+      .status(400)
+      .json({ error: 'id, emotion, year, month 파라미터가 모두 필요합니다.' });
+  }
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT credit_date AS date, use_place, credit
+      FROM ai_transactional
+      WHERE id = ?
+        AND emotion = ?
+        AND YEAR(credit_date) = ?
+        AND MONTH(credit_date) = ?
+      ORDER BY credit_date
+      `,
+      [id, emotion, year, month]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Error GET /api/chart/emotion/detail:', err);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+
+// ==================================================================
+// (7) 월별 지출 합계 조회
+//    GET /api/spending/monthly?id=<userId>
+// ==================================================================
+app.get('/api/spending/monthly', async (req, res) => {
+  const userId = req.query.id;
+  if (!userId) {
+    return res.status(400).json({ error: 'userId (login.id) 가 필요합니다.' });
+  }
+
+  try {
+    // 여기서 pool.query가 아니라 db.query를 사용합니다.
+    const [rows] = await db.query(
+      `
+      SELECT
+        DATE_FORMAT(credit_date, '%Y-%m') AS month,
+        SUM(credit) AS amount
+      FROM ai_transactional
+      WHERE id = ?
+      GROUP BY month
+      ORDER BY month;
+      `,
+      [userId]
+    );
+    return res.json(rows);
+  } catch (err) {
+    console.error('월별 지출 조회 실패', err);
+    return res.status(500).json({ error: '월별 지출 조회 중 오류가 발생했습니다.' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
