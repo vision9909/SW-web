@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import '../pages/DashboardStyle.css';
 
 export default function Calendar({ userId }) {
+    const navigate = useNavigate();
+
     const [year, setYear] = useState(null);
     const [month, setMonth] = useState(null);
     const [spendingData, setSpendingData] = useState({});
@@ -135,7 +138,10 @@ export default function Calendar({ userId }) {
         <div style={{ width: '100%', height: '100%' }}>
             {/* 헤더: 이전 달, 연도 선택, 월 표시, 다음 달 */}
             <div className='DateCategory_header'>
-                <div className='DateCategory_title'>Calendar</div>
+                <div
+                    className='DateCategory_title'
+                    onClick={() => navigate('/date-category')}
+                >Calendar</div>
                 <div className='DateCategory_controls'>
                     <select
                         value={year}
