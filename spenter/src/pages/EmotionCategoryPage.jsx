@@ -52,8 +52,9 @@ export default function EmotionCategoryPage({userId}) {
             .then(rows => {
                 // rows: [ { date, use_place, credit }, … ]
                 const details = rows.map(r => ({
-                    date: r.date.slice(0, 10),
-                    place: r.use_place,
+                    // r.credit_date: "2025-04-01" (MySQL DATE → JS string)
+                    date: r.date.split('T')[0],   // → "2025-04-01"
+                    place:  r.use_place,
                     amount: r.credit
                 }));
                 setDetailList(details);
