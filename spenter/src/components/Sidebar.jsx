@@ -1,7 +1,7 @@
 //src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTachometerAlt, FaWallet, FaSmile, FaCalendarAlt, FaRobot } from 'react-icons/fa';
-import '../pages/Spenter.css';
+import './SidebarStyle.css';
 
 export default function Sidebar() {
   const userName = localStorage.getItem('loggedInUsername');

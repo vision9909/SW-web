@@ -7,7 +7,8 @@ import {
     Legend
 } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
-import './Spenter.css';
+import AI_AnalyzeForm from '../components/AI_AnalyzeForm';
+import './DashboardStyle.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 /*더미데이터*/
@@ -15,9 +16,7 @@ import ChartEmotion from '../components/ChartEmotion';
 import ChartCategory from '../components/ChartCategory';
 
 
-
-
-export default function DashboardPage({transactions}) {
+export default function DashboardPage({ transactions, userId }) {
     const navigate = useNavigate();
 
     /* Transactions 잔액, 수입, 지출 계산 코드 */
@@ -31,81 +30,69 @@ export default function DashboardPage({transactions}) {
 
 
     return (
-        <div style={{ display: 'flex', height: '100vh' }}>
+        <div style={{ display: 'flex', minheight: '100vh' }}>
             <div className="sidebar">
                 <Sidebar />
             </div>
             {/* 본문 */}
-            <div
-                style={{
-                    flex: 1,
-                    padding: '20px 30px',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px',
-                    backgroundColor: '#F5E2C2'
-                }}
-            >
-                {/* 1행 */}
-                <div style={{ display: 'flex', gap: '20px', height: '45%' }}>
-                    <div style={{ flex: 2.5, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <div
-                            style={{
-                                width: '30%', /* 영역을 30퍼내로 조정 */
-                                fontSize: '20px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                color: '#333'
-                            }}
-                            onClick={() => navigate('/transactions')}
-                        >
+            <div className='dashboard_container'>
+                <div className='dashboard_top'>
+                    <div className='Transcations_container'>
+                        <div className='Transactions_top' onClick={() => navigate('/transactions')}>
                             거래내역
                         </div>
-                        <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
-                            <div className="Transactions_box balance-box">
+                        <div className='Transactions-row'>
+                            <div className="Transactions_list balance-box">
                                 <h3>잔액</h3>
                                 <p>{balance.toLocaleString()}원</p>
                             </div>
-                            <div className="Transactions_box income-box">
+                            <div className="Transactions_list income-box">
                                 <h3>수입</h3>
                                 <p>{totalIncome.toLocaleString()}원</p>
                             </div>
-                            <div className="Transactions_box expense-box">
+                            <div className="Transactions_list expense-box">
                                 <h3>지출</h3>
                                 <p>{totalExpense.toLocaleString()}원</p>
                             </div>
                         </div>
-                        <div style={{ display: 'flex', flex: 1 }}>
+                        <div className='TransactionsAI_container'>
                             {/* 유저가 직접 입력한 input-text */}
-                            <div className="User_Transaction_box">
-                                <h2 style={{ textAlign: 'center' }}>ㅇㅇ</h2>
+                            <div className="AI_inputTextTitle" style={{ width: '100%' }}>
+                                <h2>AI 지출 분석</h2>
+                                <hr></hr>
+                            </div>
+                            <div>
+                                <AI_AnalyzeForm userId={userId} />
                             </div>
                         </div>
                     </div>
                     {/* 감정별 지출 차트 */}
                     <div className='EmotionCategory_container'>
-                        <div style={{ marginBottom: '10px', }} onClick={() => navigate('/emotion-category')}>
-                            감정 별 지출
+                        <div className='Emotion_container'>
+                            <div onClick={() => navigate('/emotion-category')}>
+                                <h4>감정 별 지출</h4>
+                            </div>
+                            <hr></hr>
+                            <div style={{ width: '80%', height: '300px' }}>
+                                <ChartEmotion />
+                            </div>
                         </div>
-                        <div style={{ width: '80%', height: '300px' }}>
-                            <ChartEmotion />
-                        </div>
-                    </div>
 
-                    {/* 카테고리별 지출 차트 */}
-                    <div className='EmotionCategory_container'>
-                        <div style={{ marginBottom: '10px' }} onClick={() => navigate('/emotion-category')}>
-                            카테고리 별 지출
-                        </div>
-                        <div style={{ width: '80%', height: '300px' }}>
-                            <ChartCategory />
+                        {/* 카테고리별 지출 차트 */}
+                        <div className='Category_container'>
+                            <div onClick={() => navigate('/emotion-category')}>
+                                <h4>카테고리 별 지출</h4>
+                            </div>
+                            <hr></hr>
+                            <div style={{ width: '80%', height: '300px' }}>
+                                <ChartCategory />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* 2행: 달력 + AI 피드백 */}
-                <div style={{ display: 'flex', gap: '20px', height: '50%' }}>
+                <div className='dashboard_bottom'>
                     <div className='DateCategory_container' onClick={() => navigate('/date-category')}>
                         날짜 별 지출 (달력)
                     </div>

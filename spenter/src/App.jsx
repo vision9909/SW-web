@@ -13,6 +13,9 @@ import FeedbackPage from './pages/FeedbackPage';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 export default function App() {
+    // id
+    const userIdFromStorage = localStorage.getItem('userId');
+
     {/* 거래내역을 대시보드에 볼 수 있게 하기 위함 */ }
     const [transactions, setTransactions] = useState([
         {
@@ -43,7 +46,10 @@ export default function App() {
                     path="/dashboard"
                     element={
                         <ProtectedRoute>
-                            <DashboardPage transactions={transactions} />
+                            <DashboardPage
+                                userId={userIdFromStorage}
+                                transactions={transactions}
+                            />
                         </ProtectedRoute>
                     }
                 />
@@ -60,7 +66,12 @@ export default function App() {
                 />
                 {/* 감정 카테고리 별 지출 라우터 */}
                 <Route path="/emotion-category" element={
-                    <ProtectedRoute> <EmotionCategoryPage /> </ProtectedRoute>
+                    <ProtectedRoute>
+                        <EmotionCategoryPage
+                            userId={userIdFromStorage}
+                            transactions={transactions}
+                            />
+                        </ProtectedRoute>
                 } />
 
                 {/* 날짜 별 지출 라우터 */}

@@ -1,30 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import './Spenter.css';
-
-const dummySpendingData = {
-  '2025-03-12': [
-    { category: '교통', amount: 1800, emotion: '무감정' },
-    { category: '식비', amount: 9000, emotion: '기쁨' },
-  ],
-  '2025-03-25': [
-    { category: '문화', amount: 15000, emotion: '스트레스' },
-  ],
-  '2025-04-02': [
-    { category: '식비', amount: 11000, emotion: '기쁨' },
-    { category: '쇼핑', amount: 22000, emotion: '충동' },
-  ],
-  '2025-04-15': [
-    { category: '기타', amount: 3000, emotion: '짜증' },
-  ],
-  '2025-05-24': [
-    { category: '식비', amount: 12000, emotion: '기쁨' },
-    { category: '문화', amount: 8000, emotion: '충동' },
-  ],
-  '2025-05-25': [
-    { category: '교통', amount: 3300, emotion: '짜증' },
-  ],
-};
 
 
 export default function DateCategoryPage() {
@@ -32,8 +7,25 @@ export default function DateCategoryPage() {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [spendingData, setSpendingData] = useState({});
+  const todayStr = today.toLocaleDateString('sv-SE');
 
-  const todayStr = today.toISOString().split('T')[0];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const id = localStorage.getItem('userId'); // 또는 'vision9909' 같은 고정 ID
+        if (!id) return null; // 혹은 navigate('/')
+        const res = await fetch(`/api/chart/calendar?id=${id}`);
+        if (!res.ok) throw new Error('API 오류 발생');
+        const data = await res.json();
+        setSpendingData(data);
+      } catch (err) {
+        console.error('지출 데이터 가져오기 실패:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
   const getStartDay = (year, month) => new Date(year, month, 1).getDay();
@@ -42,7 +34,7 @@ export default function DateCategoryPage() {
   const startDay = getStartDay(year, month);
 
   const getSpendingTotal = (dateStr) => {
-    const data = dummySpendingData[dateStr];
+    const data = spendingData[dateStr];
     if (!data) return 0;
     return data.reduce((sum, item) => sum + item.amount, 0);
   };
@@ -101,13 +93,13 @@ export default function DateCategoryPage() {
   };
 
   const renderDetails = () => {
-    if (!selectedDate || !dummySpendingData[selectedDate]) return null;
+    if (!selectedDate || !spendingData[selectedDate]) return null;
 
     return (
       <div style={detailsBox}>
         <h3>{selectedDate} 지출 상세</h3>
         <ul>
-          {dummySpendingData[selectedDate].map((item, idx) => (
+          {spendingData[selectedDate].map((item, idx) => (
             <li key={idx}>
               {item.category} - {item.amount.toLocaleString()}원 ({item.emotion})
             </li>
@@ -116,6 +108,7 @@ export default function DateCategoryPage() {
       </div>
     );
   };
+
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
