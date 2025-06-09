@@ -264,6 +264,33 @@ app.post('/api/ai-transaction', async (req, res) => {
 });
 
 
+
+// ─────────────────────────────────────────────────────────────────
+// (1) 감정별 지출 합계 조회 API
+//   - 요청: GET /api/chart/emotion?id=<사용자ID>
+//   - 반환 예시: [ { emotion: '기쁨', total: 16000 }, { emotion: '슬픔', total: 15000 }, … ]
+// ─────────────────────────────────────────────────────────────────
+app.get('/api/chart/emotion', async (req, res) => {
+    try {
+        const userId = req.query.id;
+        if (!userId) {
+            return res.status(400).json({ message: 'id 파라미터가 필요합니다.' });
+        }
+
+        const [rows] = await db.query(
+            `SELECT emotion, SUM(credit) AS total
+            FROM ai_transactional
+            WHERE id = ?
+            GROUP BY emotion`,
+            [userId]
+        );
+        return res.json(rows);
+    } catch (err) {
+        console.error('Error GET /api/chart/emotion:', err);
+        return res.status(500).json({ message: '서버 오류' });
+    }
+});
+
 // ─────────────────────────────────────────────────────────────────
 // (2) 카테고리별 지출 합계 조회 API
 //   - 요청: GET /api/chart/category?id=<사용자ID>
@@ -273,7 +300,7 @@ app.get('/api/chart/category', async (req, res) => {
     try {
         const userId = req.query.id;
         if (!userId) {
-            return res.status(400).json({message: 'id 파라미터가 필요합니다.'});
+            return res.status(400).json({ message: 'id 파라미터가 필요합니다.' });
         }
 
         const [rows] = await db.query(
@@ -286,7 +313,7 @@ app.get('/api/chart/category', async (req, res) => {
         return res.json(rows);
     } catch (err) {
         console.error('Error GET /api/chart/category:', err);
-        return res.status(500).json({message: '서버 오류'});
+        return res.status(500).json({ message: '서버 오류' });
     }
 });
 
