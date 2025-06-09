@@ -52,7 +52,7 @@ export default function EmotionCategoryPage({userId}) {
             .then(rows => {
                 // rows: [ { date, use_place, credit }, … ]
                 const details = rows.map(r => ({
-                    date: r.date,
+                    date: r.date.slice(0, 10),
                     place: r.use_place,
                     amount: r.credit
                 }));
